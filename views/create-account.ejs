@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Wardiere Inc.</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Back To Welcome Page</a></li>
+                    <li><a href="/subscription">Subscription</a></li>
+                    <li><a href="/wallet">Wallet</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="create-account-section">
+        <div class="container create-account-container">
+            <div class="create-account-left">
+                <img src="create-account.png" alt="Progress Image">
+            </div>
+            <div class="create-account-right">
+                <h2>CREATE NEW ACCOUNT</h2>
+                <p>Already Registered? <a href="/login">Login</a></p>
+                <form action="/create-account" method="POST">
+                    <label for="name">Please enter your name</label>
+                    <input type="text" id="name" class="form-control" name="name" required>
+
+                    <label for="email">Please enter Email</label>
+                    <input type="email" id="email" class="form-control" name="email" required>
+
+                    <label for="password">Please enter password</label>
+                    <input type="password" id="password" class="form-control" name="password" required>
+
+                    <label for="identity">Submit Identity documents</label>
+                    <input type="file" id="identity" class="form-control" name="identity">
+
+                    <a href="/login"><button id="loginButton">Sign Up</button></a>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

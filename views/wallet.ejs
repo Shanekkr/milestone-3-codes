@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="wallet-container">
+        <div class="wallet-header">
+            <a href="/home" class="back-home">&larr; Wadiere Inc.</a>
+        </div>
+        <div class="wallet-balance">
+            <h2>Total Amount</h2>
+            <p id="totalAmount">$<%= totalAmount %></p>
+        </div>
+        <div class="wallet-actions">
+            <a href="/topup"><button id="topUpButton">Top Up</button></a>
+            <a href="/withdraw"><button id="withdrawButton">Withdraw</button></a>
+            <a href="/transactions"><button id="transactionHistoryButton">transaction</button></a>
+        </div>
+    </div>
+</body>
+</html>
+

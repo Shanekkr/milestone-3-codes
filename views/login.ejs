@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Wardiere Inc.</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Back To Welcome Page</a></li>
+                    <li><a href="/subscription">Subscription</a></li>
+                    <li><a href="/create-account">Create Account</a></li>
+                    <li><a href="/login" class="active">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="login-section">
+        <div class="container login-container">
+            <div class="login-left">
+              
+            </div>
+            <div class="login-right">
+                <h2>LOGIN TO YOUR ACCOUNT</h2>
+                <p>New here? <a href="/create-account">Create Account</a></p>
+                <form action="/login" method="POST">
+                    <label for="email">Please enter your email</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="password">Please enter your password</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <a href="/home">login</a>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
