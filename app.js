@@ -10,10 +10,10 @@ const PORT = process.env.PORT || 3000;
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'c369_project'
+    host: 'db4free.net',
+    user: 'shanekkr',
+    password: 'whitesmoke77',
+    database: 'c237_projectlib'
 });
 
 db.connect((err) => {
