@@ -64,29 +64,39 @@ app.post('/create-account', async (req, res) => {
     }
 });
 
-app.get('/login', (req, res) => {
-    res.render('login');
+app.get('/login', (req,res) => {
+
+    res.render('login', {
+        messages: req.flash('success'),// Retrieve success messages from the session and pass them to the view
+        errors: req.flash('error') // Retrieve error messages from the session and pass them to the view
+    });
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
     const { email, password } = req.body;
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.query(query, [email], async (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Server error');
+
+    // Validate email and password
+    if (!email || !password) {
+        req.flash('error', 'All fields are required.');
+        return res.redirect('/login');
+    }
+
+    const sql = 'SELECT * FROM users Where email = ? AND password = SHA1(?)';
+    db.query(sql, [email, password], (err, results) => {
+        if(err) {
+            throw err;
         }
+
         if (results.length > 0) {
-            const user = results[0];
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                // Successful login
-                res.redirect('/');
-            } else {
-                res.status(400).send('Invalid credentials');
-            }
+            //successful login
+            req.session.user = results[0]; // store user in session
+            req.flash('success', 'Login successful!');
+            //TODO (L11b): Update to redirect users to /dashboard route upon successful log in
+            res.redirect('/dashboard');
         } else {
-            res.status(400).send('User not found');
+            //invalid credentials
+            req.flash('error', 'Invalid email or password.');
+            res.redirect('/login');
         }
     });
 });
