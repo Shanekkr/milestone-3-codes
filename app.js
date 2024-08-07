@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const flash = require('connect-flash');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt'); // Import bcrypt
 
@@ -28,6 +29,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    // Session expires after 1 week of inactivity
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
+}));
+
+app.use(flash());
 
 // Dummy data to simulate the total amount (in a real app, this would come from a database)
 let totalAmount = 0;
@@ -64,15 +75,14 @@ app.post('/create-account', async (req, res) => {
     }
 });
 
-app.get('/login', (req,res) => {
-
+app.get('/login', (req, res) => {
     res.render('login', {
-        messages: req.flash('success'),// Retrieve success messages from the session and pass them to the view
+        messages: req.flash('success'), // Retrieve success messages from the session and pass them to the view
         errors: req.flash('error') // Retrieve error messages from the session and pass them to the view
     });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     // Validate email and password
@@ -81,21 +91,32 @@ app.post('/login', (req, res) => {
         return res.redirect('/login');
     }
 
-    const sql = 'SELECT * FROM users Where email = ? AND password = SHA1(?)';
-    db.query(sql, [email, password], (err, results) => {
-        if(err) {
-            throw err;
+    const query = 'SELECT * FROM users WHERE email = ?';
+    db.query(query, [email], async (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Server error');
         }
 
         if (results.length > 0) {
-            //successful login
-            req.session.user = results[0]; // store user in session
-            req.flash('success', 'Login successful!');
-            //TODO (L11b): Update to redirect users to /dashboard route upon successful log in
-            res.redirect('/dashboard');
+            const user = results[0];
+
+            // Compare the provided password with the hashed password in the database
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                console.log('Password match');
+                // Successful login
+                req.session.user = user; // Store user in session
+                req.flash('success', 'Login successful!');
+                res.redirect('/home'); // Redirect to the correct route for your dashboard
+            } else {
+                console.log('Invalid credentials');
+                req.flash('error', 'Invalid email or password.');
+                res.redirect('/login');
+            }
         } else {
-            //invalid credentials
-            req.flash('error', 'Invalid email or password.');
+            console.log('User not found');
+            req.flash('error', 'User not found.');
             res.redirect('/login');
         }
     });
@@ -108,7 +129,6 @@ app.get('/home', (req, res) => {
 app.get('/subscription', (req, res) => {
     res.render('subscription');
 });
-
 
 app.get('/purchase/:plan', (req, res) => {
     const plan = req.params.plan;
